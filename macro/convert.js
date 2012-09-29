@@ -34,9 +34,10 @@ jsminc = jsminc.replace(/function ([^\(]+)\(([^\)]*)\)[^{]+/g, function (_, fnNa
 jsminc = jsminc.replace(/int /g, 'var ');
 
 // Upcast jsmin into a reusable module
+// TODO: This step is too damn big
 jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
   // Generate prefix text and indent all of jsmin
-  var prefix = 'function jsminFn(options) {',
+  var prefix = 'function jsminFn(stdin, options) {',
       prefixToIndent = [
         '',
         '// Fallback options',
@@ -47,7 +48,22 @@ jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
         '    stderr = options.stderr || console.error,',
         '    exit = options.exit || process.exit;',
         '',
-        '// Begin normal jsmin.c code'
+        '// Generate fputs, fputc, getc, putc, fprintf',
+        'var fputs = function (str, stream) {',
+        '      stream(str);',
+        '    },',
+        '    fputc = fputs,',
+        '    putc = fputs,',
+        '    fprintf = function (stream, formatStr, input) {',
+        '      var outStr = formatStr.replace(\'%s\', input);',
+        '      fputs(outStr, stream);',
+        '    },',
+        '    getc = function () {',
+        '      return stdin.read(1);',
+        '    };',
+        '',
+        '// Begin normal jsmin.c code',
+        ''
       ].join('\n');
 
   // Add prefix to indent onto jsmin
@@ -68,20 +84,10 @@ jsminc = jsminc + [
     '}',
     '',
     '// Export jsminFn',
-    'modulex.exports = jsminFn;'
+    'module.exports = jsminFn;'
   ].join('\n');
 
 // TODO: Strict equality
-
-// This should be fputs -> concatenates onto an error then exit(1) throws concatenated piece
-// TODO: Handle fputs("JSMIN Error: ", stderr);
-// TODO: Handle fputc('\n', stderr);
-// TODO: Handle exit(1);
-
-// TODO: Handle c = getc(stdin);
-// TODO: Handle putc(theA, stdout);
-
-// TODO: Handle fprintf(stdout, "// %s\n", argv[i]);
 
 // Write out the converted file
 fs.writeFileSync(__dirname + '/../lib/jsmin.c.js', jsminc, 'utf8');

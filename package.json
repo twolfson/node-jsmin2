@@ -1,0 +1,22 @@
+{
+  "name": "node-jsmin2",
+  "version": "0.0.0",
+  "description": "Another port of JSMin",
+  "main": "jsmin.js",
+  "scripts": {
+    "test": "node tests/jsmin.test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/twolfson/node-jsmin2.git"
+  },
+  "keywords": [
+    "jsmin",
+    "minify",
+    "minification",
+    "min",
+    "compress"
+  ],
+  "author": "Todd Wolfson <todd@twolfson.com>",
+  "license": "The Software shall be used for Good, not Evil. (see LICENSE)"
+}

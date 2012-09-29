@@ -43,10 +43,12 @@ jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
         '// Fallback options',
         'options = options || {};',
         '',
-        '// Grab stdout, stderr, and exit',
+        '// Grab stdout, stderr, exit, argc, and argv',
         'var stdout = options.stdout || console.log,',
         '    stderr = options.stderr || console.error,',
-        '    exit = options.exit || process.exit;',
+        '    exit = options.exit || process.exit,',
+        '    argc = options.argc || 0,',
+        '    argv = options.argv || [];',
         '',
         '// Generate fputs, fputc, getc, putc, fprintf',
         'var fputs = function (str, stream) {',
@@ -80,6 +82,9 @@ jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
 });
 
 jsminc = jsminc + [
+    '',
+    '    // Invoke and return main',
+    '    return main(argc, argv);',
     '',
     '}',
     '',

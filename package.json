@@ -2,7 +2,7 @@
   "name": "node-jsmin2",
   "version": "0.0.0",
   "description": "Another port of JSMin",
-  "main": "jsmin.js",
+  "main": "lib/jsmin.js",
   "scripts": {
     "test": "node tests/jsmin.test.js"
   },

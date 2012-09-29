@@ -18,7 +18,7 @@ jsminc = jsminc.replace(/static int[^A-Za-z]*/g, 'function ');
 jsminc = jsminc.replace(/extern int[^A-Za-z]*/g, 'function ');
 
 // Remove types from function statements
-jsminc = jsminc.replace(/function ([^\(]+)\(([^\)]+)\)[^{]+/g, function (_, fnName, params) {
+jsminc = jsminc.replace(/function ([^\(]+)\(([^\)]*)\)[^{]+/g, function (_, fnName, params) {
   var paramArr = params.split(', '),
       cleanParamArr = paramArr.map(function (param) {
         var paramSansFront = param.replace(/^[^\s]+\s+/, ''),
@@ -32,6 +32,36 @@ jsminc = jsminc.replace(/function ([^\(]+)\(([^\)]+)\)[^{]+/g, function (_, fnNa
 
 // Replace types inside functions with vars
 jsminc = jsminc.replace(/int /g, 'var ');
+
+// Upcast jsmin into a reusable module
+jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
+  // Generate prefix text and indent all of jsmin
+  var prefix = [
+        'function jsminFn(options) {',
+        '    // Fallback options',
+        '    options = options || {};',
+        '',
+        '    // Grab stdout, stderr, and exit',
+        '    var stdout = options.stdout || console.log,',
+        '        stderr = options.stderr || console.error,',
+        '        exit = options.exit || process.exit;',
+        '',
+        '    // Begin normal jsmin.c code'
+      ].join('\n'),
+      jsminIndented = jsmin.replace(/\n/g, '\n    ');
+
+  // Join together prefix and jsmin and return
+  var retVal = prefix + jsminIndented;
+  return retVal;
+});
+
+jsminc = jsminc + [
+    '',
+    '}',
+    '',
+    '// Export jsminFn',
+    'modulex.exports = jsminFn;'
+  ].join('\n');
 
 // TODO: Strict equality
 // TODO: Module.exports

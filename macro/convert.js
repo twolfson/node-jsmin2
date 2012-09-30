@@ -33,6 +33,10 @@ jsminc = jsminc.replace(/function ([^\(]+)\(([^\)]*)\)[^{]+/g, function (_, fnNa
 // Replace types inside functions with vars
 jsminc = jsminc.replace(/int /g, 'var ');
 
+// Upcase equality to strict equality
+jsminc = jsminc.replace(/==/g, '===');
+jsminc = jsminc.replace(/!=/g, '!==');
+
 // Upcast jsmin into a reusable module
 // TODO: This step is too damn big
 jsminc = jsminc.replace(/var EOF = -1;(.|\n)*/, function (jsmin) {
@@ -91,8 +95,6 @@ jsminc = jsminc + [
     '// Export jsminFn',
     'module.exports = jsminFn;'
   ].join('\n');
-
-// TODO: Strict equality
 
 // Write out the converted file
 fs.writeFileSync(__dirname + '/../lib/jsmin.c.js', jsminc, 'utf8');

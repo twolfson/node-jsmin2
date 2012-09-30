@@ -1,5 +1,5 @@
 {
-  "name": "node-jsmin2",
+  "name": "jsmin2",
   "version": "1.1.1",
   "description": "Another port of JSMin",
   "main": "lib/jsmin.js",

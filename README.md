@@ -26,7 +26,7 @@ var jsmin = require('node-jsmin2'),
 // Process the jquery source via jsmin
 var jqueryMinObj = jsmin(jquerySrc);
 
-// Minified code is availabe at
+// Minified code is available at
 // jqueryMinObj.code;
 
 // Coordinate map of source code to minified code is available at

@@ -37,6 +37,14 @@ for (; i < len; i++) {
   assert.strictEqual(char, srcChar, 'Character at ' + i + ' does not match source character at ' + srcIndex + '.');
 }
 
+// Assert that basic matches as expected
+var basicSrc = fs.readFileSync(testFilesDir + '/basic.js', 'utf8'),
+    expectedBasic = fs.readFileSync(expectedDir + '/basic.min.js', 'utf8'),
+    actualBasic = jsmin(basicSrc),
+    actualBasicCode = actualBasic.code,
+    actualBasicMap = actualBasic.codeMap;
+
+assert.strictEqual(expectedBasic, actualBasicCode, 'Minified basic does not match as expected.');
 
 // Log success when done
 console.log('Success!');

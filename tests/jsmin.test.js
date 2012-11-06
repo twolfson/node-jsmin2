@@ -2,8 +2,16 @@ var fs = require('fs'),
     assert = require('assert'),
     jsmin = require('../lib/jsmin'),
     testFilesDir = __dirname + '/test_files',
-    expectedDir = __dirname + '/expected_files',
-    jQuerySrc = fs.readFileSync(testFilesDir + '/jquery.js', 'utf8'),
+    expectedDir = __dirname + '/expected_files';
+
+// Assert that we can minify tabbed code
+var myTabbedCode = '\t\thello\n\t\tworld\t';
+assert.doesNotThrow(function () {
+  var minifiedTabbedCode = jsmin(myTabbedCode);
+  // console.log(myTabbedCode, minifiedTabbedCode);
+}, 'Tabbed code cannot be minified');
+
+var jQuerySrc = fs.readFileSync(testFilesDir + '/jquery.js', 'utf8'),
     expectedJQuery = fs.readFileSync(expectedDir + '/jquery.min.js', 'utf8'),
     actualJQuery = jsmin(jQuerySrc),
     actualJQueryCode = actualJQuery.code,

@@ -5,7 +5,7 @@ var fs = require('fs'),
     expectedDir = __dirname + '/expected_files';
 
 // Assert that we can minify tabbed code
-var myTabbedCode = 'console.log("\t\thello\n\t\tworld\t");';
+var myTabbedCode = 'console.log("\t\thello\n\t\r\tworld\t");';
 assert.doesNotThrow(function () {
   var minifiedTabbedCode = jsmin(myTabbedCode);
   // console.log(myTabbedCode, minifiedTabbedCode);

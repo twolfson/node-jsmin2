@@ -1,4 +1,4 @@
-# node-jsmin2
+# node-jsmin2 [![Donate on Gittip](http://badgr.co/gittip/twolfson.png)](https://www.gittip.com/twolfson/)
 
 Another port of JSMin -- this time outputting a coordinate map
 

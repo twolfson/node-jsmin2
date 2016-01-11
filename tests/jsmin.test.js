@@ -11,6 +11,49 @@ assert.doesNotThrow(function () {
   // console.log(myTabbedCode, minifiedTabbedCode);
 }, 'Tabbed code cannot be minified');
 
+// Assert that basic matches as expected
+var extendedSrc = fs.readFileSync(testFilesDir + '/extended.js', 'utf8'),
+    expectedExtended = fs.readFileSync(expectedDir + '/extended.min.js', 'utf8'),
+    actualExtended = jsmin(extendedSrc),
+    actualExtendedCode = actualExtended.code,
+    actualExtendedMap = actualExtended.codeMap;
+
+assert.strictEqual(expectedExtended, actualExtendedCode, 'Minified extended ascii does not match as expected.');
+
+// Reverse the map for checking
+var codeMap = {};
+Object.getOwnPropertyNames(actualExtendedMap).forEach(function (srcPoint) {
+  var destPoint = actualExtendedMap[srcPoint];
+  codeMap[destPoint] = srcPoint;
+});
+
+// Assert that the mapping is proper
+var i = 0,
+    len = actualExtendedCode.length,
+    srcIndex,
+    char,
+    srcChar,
+    timesSkipped = 0;
+for (; i < len; i++) {
+  char = actualExtendedCode.charAt(i);
+  srcIndex = codeMap[i];
+
+  if (srcIndex !== undefined) {
+    srcChar = extendedSrc.charAt(srcIndex);
+
+    // Debug here
+    // console.log(char, srcChar);
+
+    // Assert that the char and srcChar line up
+    assert.strictEqual(char, srcChar, 'Character at ' + i + ' does not match source character at ' + srcIndex + '.');
+  } else {
+    timesSkipped += 1;
+  }
+}
+
+// Assert that during the mapping we skipped at most once
+assert.ok(timesSkipped <= 1, 'During mapping, we skipped at most once');
+
 var jQuerySrc = fs.readFileSync(testFilesDir + '/jquery.js', 'utf8'),
     expectedJQuery = fs.readFileSync(expectedDir + '/jquery.min.js', 'utf8'),
     actualJQuery = jsmin(jQuerySrc),
@@ -19,7 +62,6 @@ var jQuerySrc = fs.readFileSync(testFilesDir + '/jquery.js', 'utf8'),
 
 // Assert that the minified jQuery matches the expected version
 assert.strictEqual(expectedJQuery, actualJQueryCode, 'Minified jQuery does not match as expected.');
-
 // Reverse the map for checking
 var codeMap = {};
 Object.getOwnPropertyNames(actualJQueryMap).forEach(function (srcPoint) {

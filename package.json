@@ -18,5 +18,16 @@
     "compress"
   ],
   "author": "Todd Wolfson <todd@twolfson.com>",
-  "license": "The Software shall be used for Good, not Evil. (see LICENSE)"
+  "license": "The Software shall be used for Good, not Evil. (see LICENSE)",
+  "devDependencies": {
+    "foundry": "~4.3.2",
+    "foundry-release-git": "~2.0.2",
+    "foundry-release-npm": "~2.0.2"
+  },
+  "foundry": {
+    "releaseCommands": [
+      "foundry-release-git",
+      "foundry-release-npm"
+    ]
+  }
 }

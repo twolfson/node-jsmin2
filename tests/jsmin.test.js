@@ -130,5 +130,10 @@ for (; i < len; i++) {
 // Assert that during the mapping we skipped at most once
 assert.ok(timesSkipped <= 1, 'During mapping, we skipped at most once');
 
+// Make sure it works when running off end of string
+assert.doesNotThrow(function () {
+  jsmin('{\n}\n')
+});
+
 // Log success when done
 console.log('Success!');
